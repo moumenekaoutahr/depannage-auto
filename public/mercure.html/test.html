@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Mercure</title>
+    <style>
+        :root {
+            --radius-xl: 30px;
+            --radius-lg: 20px;
+            --radius-md: 16px;
+            --shadow: 0 30px 70px rgba(0, 0, 0, 0.24);
+        }
+
+        html[data-theme="dark"] {
+            --bg-main: linear-gradient(145deg, #040404 0%, #120609 45%, #17080d 100%);
+            --paper: rgba(15, 15, 18, 0.94);
+            --paper-strong: rgba(26, 26, 31, 0.98);
+            --text: #f6f4f5;
+            --muted: #a9a1a5;
+            --line: rgba(255, 255, 255, 0.08);
+            --accent: #d91f34;
+            --accent-strong: #8f0f1d;
+            --accent-soft: rgba(217, 31, 52, 0.15);
+            --secondary: rgba(255, 255, 255, 0.06);
+            --field: rgba(255, 255, 255, 0.035);
+            --status: rgba(255, 255, 255, 0.05);
+            --message: rgba(255, 255, 255, 0.03);
+        }
+
+        html[data-theme="light"] {
+            --bg-main: linear-gradient(145deg, #f7f4f5 0%, #fff8f9 48%, #ffeef1 100%);
+            --paper: rgba(255, 255, 255, 0.94);
+            --paper-strong: rgba(252, 250, 250, 0.98);
+            --text: #171417;
+            --muted: #6a6267;
+            --line: rgba(0, 0, 0, 0.09);
+            --accent: #cc2034;
+            --accent-strong: #87101d;
+            --accent-soft: rgba(204, 32, 52, 0.10);
+            --secondary: rgba(0, 0, 0, 0.05);
+            --field: rgba(0, 0, 0, 0.025);
+            --status: rgba(0, 0, 0, 0.03);
+            --message: rgba(0, 0, 0, 0.025);
+            --shadow: 0 26px 58px rgba(113, 34, 46, 0.14);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at 12% 14%, rgba(217, 31, 52, 0.20), transparent 24%),
+                radial-gradient(circle at 88% 10%, rgba(217, 31, 52, 0.12), transparent 18%),
+                radial-gradient(circle at 82% 76%, rgba(255, 255, 255, 0.05), transparent 20%),
+                var(--bg-main);
+        }
+
+        .shell {
+            width: min(1120px, calc(100% - 28px));
+            margin: 24px auto;
+            padding: 16px;
+            border-radius: 34px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .wrap {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 28px;
+            background:
+                linear-gradient(135deg, var(--accent-soft), transparent 55%),
+                var(--paper-strong);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            font-size: 0.76rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(2.1rem, 4vw, 3.4rem);
+            line-height: 0.95;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .hero p,
+        .section-subtitle,
+        .meta,
+        .status-box,
+        .hint {
+            color: var(--muted);
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 620px;
+            line-height: 1.6;
+        }
+
+        .hero-side {
+            display: grid;
+            gap: 14px;
+            min-width: 220px;
+        }
+
+        .theme-toggle {
+            display: inline-flex;
+            gap: 8px;
+            padding: 6px;
+            border-radius: 999px;
+            background: var(--secondary);
+            border: 1px solid var(--line);
+            align-self: flex-start;
+        }
+
+        .theme-toggle button {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .theme-toggle button.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: white;
+        }
+
+        .status-box {
+            padding: 16px 18px;
+            border-radius: 20px;
+            background: var(--status);
+            border: 1px solid var(--line);
+        }
+
+        .status-label {
+            display: block;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.72rem;
+            color: var(--accent);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+            gap: 18px;
+            padding: 18px;
+        }
+
+        .panel {
+            background: var(--paper-strong);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 22px;
+        }
+
+        .panel h2 {
+            margin: 0 0 8px;
+            font-size: 1.3rem;
+        }
+
+        .section-subtitle {
+            margin: 0 0 18px;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        input,
+        textarea,
+        button {
+            font: inherit;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px 15px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--line);
+            background: var(--field);
+            color: var(--text);
+            transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: rgba(217, 31, 52, 0.55);
+            box-shadow: 0 0 0 4px rgba(217, 31, 52, 0.12);
+            transform: translateY(-1px);
+        }
+
+        textarea {
+            min-height: 124px;
+            resize: vertical;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        button {
+            border: 0;
+            border-radius: 999px;
+            padding: 13px 18px;
+            cursor: pointer;
+            transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14);
+        }
+
+        .primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: white;
+            font-weight: 700;
+        }
+
+        .secondary {
+            background: var(--secondary);
+            color: var(--text);
+            border: 1px solid var(--line);
+        }
+
+        .ghost {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(217, 31, 52, 0.24);
+            font-weight: 700;
+        }
+
+        .feed-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .feed-head span {
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .hint {
+            padding: 16px;
+            border-radius: 18px;
+            border: 1px dashed var(--line);
+            background: var(--message);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        #messages {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 12px;
+            max-height: 640px;
+            overflow: auto;
+        }
+
+        #messages li {
+            padding: 15px;
+            background: var(--message);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+        }
+
+        .meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            font-size: 0.78rem;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: var(--text);
+            line-height: 1.55;
+        }
+
+        code {
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: var(--secondary);
+            font-family: Consolas, monospace;
+            font-size: 0.92em;
+        }
+
+        @media (max-width: 920px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: calc(100% - 18px);
+                margin: 9px auto;
+                padding: 10px;
+                border-radius: 24px;
+            }
+
+            .hero,
+            .panel {
+                padding: 18px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <main class="wrap">
+            <section class="hero">
+                <div>
+                    <p class="eyebrow">Mercure Console</p>
+                    <h1>Temps reel noir et rouge</h1>
+                    <p>Une interface plus nette pour connecter le hub, publier via Symfony et suivre les evenements en direct, avec un mode sombre marque et un mode clair plus doux.</p>
+                </div>
+
+                <div class="hero-side">
+                    <div class="theme-toggle">
+                        <button id="lightModeBtn" type="button">Light</button>
+                        <button id="darkModeBtn" type="button" class="active">Nuit</button>
+                    </div>
+
+                    <div class="status-box">
+                        <span class="status-label">Etat</span>
+                        <span id="status">En attente de connexion...</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="layout">
+                <section class="panel">
+                    <h2>Configuration</h2>
+                    <p class="section-subtitle">Renseigne le projet, le hub et le topic. Le style reste volontairement sobre, noir avec une pointe de rouge pour garder l'effet tableau de bord.</p>
+
+                    <div class="grid">
+                        <div class="field">
+                            <label for="appBase">Base du projet Symfony</label>
+                            <input id="appBase">
+                        </div>
+
+                        <div class="field">
+                            <label for="hubUrl">URL du hub</label>
+                            <input id="hubUrl">
+                        </div>
+
+                        <div class="field full">
+                            <label for="topic">Topic</label>
+                            <input id="topic" value="depannage_auto/messages">
+                        </div>
+
+                        <div class="field full">
+                            <label for="jwtToken">Token JWT Symfony</label>
+                            <textarea id="jwtToken" placeholder="Colle ici le token recu apres /api/login"></textarea>
+                        </div>
+
+                        <div class="field full">
+                            <label for="message">Message</label>
+                            <textarea id="message">Bonjour depuis Mercure</textarea>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="connectBtn" class="primary" type="button">Se connecter</button>
+                        <button id="disconnectBtn" class="secondary" type="button">Se deconnecter</button>
+                        <button id="publishBtn" class="ghost" type="button">Publier via Symfony</button>
+                    </div>
+                </section>
+
+                <aside class="panel">
+                    <div class="feed-head">
+                        <h2>Flux recu</h2>
+                        <span>Messages en direct</span>
+                    </div>
+
+                    <div class="hint" id="emptyState">
+                        Aucun message pour l'instant. Connecte le hub puis publie un evenement sur <code>depannage_auto/messages</code>.
+                    </div>
+
+                    <ul id="messages"></ul>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let manualDisconnect = false;
+
+        const appBaseInput = document.getElementById('appBase');
+        const hubUrlInput = document.getElementById('hubUrl');
+        const topicInput = document.getElementById('topic');
+        const jwtTokenInput = document.getElementById('jwtToken');
+        const messageInput = document.getElementById('message');
+        const statusBox = document.getElementById('status');
+        const messagesList = document.getElementById('messages');
+        const emptyState = document.getElementById('emptyState');
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+
+        function guessAppBase() {
+            const marker = '/mercure.html/';
+            const pathname = window.location.pathname;
+            const markerIndex = pathname.indexOf(marker);
+
+            if (markerIndex !== -1) {
+                return pathname.slice(0, markerIndex) || '';
+            }
+
+            return '/depannage_auto/public';
+        }
+
+        function guessHubUrl() {
+            const protocol = window.location.protocol || 'http:';
+            const hostname = window.location.hostname || '127.0.0.1';
+
+            return protocol + '//' + hostname + ':2019/.well-known/mercure';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('mercure_theme', theme);
+            lightModeBtn.classList.toggle('active', theme === 'light');
+            darkModeBtn.classList.toggle('active', theme === 'dark');
+        }
+
+        appBaseInput.value = localStorage.getItem('mercure_app_base') || guessAppBase();
+        hubUrlInput.value = localStorage.getItem('mercure_hub_url') || guessHubUrl();
+        topicInput.value = localStorage.getItem('mercure_topic') || topicInput.value;
+        jwtTokenInput.value = localStorage.getItem('mercure_jwt_token') || '';
+        applyTheme(localStorage.getItem('mercure_theme') || 'dark');
+
+        appBaseInput.addEventListener('input', () => {
+            localStorage.setItem('mercure_app_base', appBaseInput.value.trim());
+        });
+
+        hubUrlInput.addEventListener('input', () => {
+            localStorage.setItem('mercure_hub_url', hubUrlInput.value.trim());
+        });
+
+        topicInput.addEventListener('input', () => {
+            localStorage.setItem('mercure_topic', topicInput.value.trim());
+        });
+
+        jwtTokenInput.addEventListener('input', () => {
+            localStorage.setItem('mercure_jwt_token', jwtTokenInput.value.trim());
+        });
+
+        lightModeBtn.addEventListener('click', () => applyTheme('light'));
+        darkModeBtn.addEventListener('click', () => applyTheme('dark'));
+
+        function setStatus(text) {
+            statusBox.textContent = text;
+        }
+
+        function hideEmptyState() {
+            emptyState.style.display = 'none';
+        }
+
+        function addMessage(title, payload) {
+            hideEmptyState();
+
+            const item = document.createElement('li');
+            const meta = document.createElement('span');
+            const pre = document.createElement('pre');
+
+            meta.className = 'meta';
+            meta.textContent = title;
+            pre.textContent = payload;
+
+            item.appendChild(meta);
+            item.appendChild(pre);
+            messagesList.prepend(item);
+        }
+
+        function disconnect(showMessage = true) {
+            manualDisconnect = true;
+
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+
+            if (showMessage) {
+                setStatus('Connexion fermee.');
+            }
+        }
+
+        function connect() {
+            disconnect(false);
+            manualDisconnect = false;
+            setStatus('Connexion en cours...');
+
+            const hubUrl = hubUrlInput.value.trim();
+            const topic = topicInput.value.trim();
+
+            if (!hubUrl || !topic) {
+                setStatus('Hub URL et topic sont obligatoires.');
+                return;
+            }
+
+            let url;
+
+            try {
+                url = new URL(hubUrl);
+            } catch (error) {
+                setStatus('URL du hub invalide.');
+                return;
+            }
+
+            url.searchParams.delete('topic');
+            url.searchParams.append('topic', topic);
+
+            eventSource = new EventSource(url.toString());
+
+            eventSource.onopen = () => {
+                setStatus('Connecte au hub Mercure.');
+            };
+
+            eventSource.onmessage = (event) => {
+                addMessage('Message recu a ' + new Date().toLocaleTimeString(), event.data);
+            };
+
+            eventSource.onerror = () => {
+                if (manualDisconnect) {
+                    return;
+                }
+
+                setStatus('Erreur de connexion Mercure. Verifie que le hub tourne sur ' + hubUrl);
+            };
+        }
+
+        async function publish() {
+            const topic = topicInput.value.trim();
+            const message = messageInput.value.trim();
+
+            if (!topic || !message) {
+                setStatus('Topic et message sont obligatoires pour publier.');
+                return;
+            }
+
+            setStatus('Publication en cours...');
+
+            try {
+                const appBase = appBaseInput.value.trim().replace(/\/$/, '');
+                const token = jwtTokenInput.value.trim();
+                const headers = { 'Content-Type': 'application/json' };
+
+                if (!appBase) {
+                    throw new Error('Base du projet Symfony invalide.');
+                }
+
+                if (token) {
+                    headers.Authorization = 'Bearer ' + token;
+                }
+
+                const response = await fetch(appBase + '/api/mercure/publish', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ topic, message })
+                });
+
+                const raw = await response.text();
+                let data = null;
+
+                try {
+                    data = JSON.parse(raw);
+                } catch (e) {
+                    if (!response.ok) {
+                        throw new Error('Symfony a renvoye une page HTML ou une erreur serveur.');
+                    }
+
+                    throw new Error('Reponse JSON invalide.');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Echec de publication');
+                }
+
+                setStatus('Message publie avec succes.');
+                addMessage('Message envoye a ' + new Date().toLocaleTimeString(), JSON.stringify(data, null, 2));
+            } catch (error) {
+                setStatus('Erreur de publication: ' + error.message);
+            }
+        }
+
+        document.getElementById('connectBtn').addEventListener('click', connect);
+        document.getElementById('disconnectBtn').addEventListener('click', () => disconnect(true));
+        document.getElementById('publishBtn').addEventListener('click', publish);
+    </script>
+</body>
+</html>
